@@ -1,5 +1,6 @@
-use std::sync::mpsc::{channel, Receiver};
+use std::sync::mpsc::{channel, Receiver, RecvError};
 use std::thread;
+
 
 pub struct Terminal<T: 'static + Parse + std::marker::Send> {
 	recver: Receiver<T>,
@@ -13,8 +14,6 @@ impl <T: Parse + std::marker::Send> Terminal<T> {
 			let mut line = String::new();
 			
 			loop {
-				
-				
 				std::io::stdin().read_line(&mut line).expect("terminal failed to read line");
 				
 				if let Some(command) = T::parse(&line) {
@@ -30,12 +29,16 @@ impl <T: Parse + std::marker::Send> Terminal<T> {
 		}
 	}
 	
-	pub fn next(&self) -> Option<T> {
+	pub fn try_next(&self) -> Option<T> {
 		if let Ok(x) = self.recver.try_recv() {
 			Some(x)
 		} else {
 			None
 		}
+	}
+	
+	pub fn next(&self) -> Result<T, RecvError> {
+		self.recver.recv()
 	}
 }
 
