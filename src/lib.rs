@@ -37,8 +37,8 @@ impl <T: Parse + std::marker::Send> Terminal<T> {
 		}
 	}
 	
-	pub fn next(&self) -> Result<T, RecvError> {
-		self.recver.recv()
+	pub fn next(&self) -> T {
+		self.recver.recv().unwrap()
 	}
 }
 
