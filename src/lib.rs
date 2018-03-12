@@ -28,6 +28,10 @@ impl <T: Parse + std::marker::Send> Terminal<T> {
 		}
 	}
 	
+	pub fn next(&self) -> T {
+		self.recver.recv().unwrap()
+	}
+	
 	pub fn try_next(&self) -> Option<T> {
 		if let Ok(x) = self.recver.try_recv() {
 			Some(x)
@@ -36,12 +40,12 @@ impl <T: Parse + std::marker::Send> Terminal<T> {
 		}
 	}
 	
-	pub fn next(&self) -> T {
-		self.recver.recv().unwrap()
-	}
-	
 	pub fn iter(&self) -> ::std::sync::mpsc::Iter<T> {
 		self.recver.iter()
+	}
+	
+	pub fn try_iter(&self) -> ::std::sync::mpsc::TryIter<T> {
+		self.recver.try_iter()
 	}
 }
 pub trait Parse {
