@@ -56,10 +56,6 @@ pub trait Parse {
 
 impl Parse for String {
 	fn parse(line: &String) -> Option<Self> {
-		if line.is_empty() {
-			None
-		} else {
-			Some(line.clone())
-		}
+		Some(line.clone())
 	}
 }
