@@ -48,8 +48,18 @@ impl <T: Parse + std::marker::Send> Terminal<T> {
 		self.recver.try_iter()
 	}
 }
+
 pub trait Parse {
 	fn parse(line: &String) -> Option<Self>
-	where
-		Self: std::marker::Sized;
+	where	Self: std::marker::Sized;
+}
+
+impl Parse for String {
+	fn parse(line: &String) -> Option<Self> {
+		if line.is_empty() {
+			None
+		} else {
+			Some(line.clone())
+		}
+	}
 }
